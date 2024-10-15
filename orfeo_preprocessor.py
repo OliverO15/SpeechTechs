@@ -54,8 +54,6 @@ def generate_sentences(filename, corpus_path, dest_dir, transcription_filepath):
     out_file.close()
     __generate_sentence(info, os.path.join(corpus_path, f"{filename}.wav"), dest_dir)
     
-    
-
 
 # def __generate_sentence(start, end, in_filename, out_filename, dest_dir): 
 def __generate_sentence(info, in_filename, dest_dir): 
