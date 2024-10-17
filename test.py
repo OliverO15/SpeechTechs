@@ -5,6 +5,7 @@ import shutil
 import audiosegment
 from tqdm import tqdm
 
+
 def create_transcription_line(string):
     # Split the section by line breaks
     lines = string.strip().split('\n')
@@ -40,14 +41,17 @@ def create_transcriptions(orfeo_string):
 
     return transcriptions
 
+
 def create_transcription_string(transcription):
     return f"<s>{transcription['sentence']}</s> {transcription['id']}.16le\n"
 
-def create_transscription_file(transcriptions, filename):
+
+def create_transcription_file(transcriptions, filename):
     with open(filename, "w") as f:
         for transcription in transcriptions:
             print(transcription)
             f.write(create_transcription_string(transcription))
+
 
 def create_audio_files(transcriptions, audio_file, output_folder):
     for transcription in transcriptions:
@@ -60,6 +64,7 @@ def create_audio_files(transcriptions, audio_file, output_folder):
         fragment = sample[start_time:end_time]
         fragment.export(output_folder + id + ".16le", format="s16le", bitrate='16k')
 
+
 if __name__ == "__main__":
     orfeo_string = ""
 
@@ -70,7 +75,7 @@ if __name__ == "__main__":
     transcriptions = create_transcriptions(orfeo_string)
     print((transcriptions))
 
-    create_transscription_file(transcriptions, "test.txt")
+    create_transcription_file(transcriptions, "test.txt")
 
     # create_audio_files(transcriptions, "./corpus_fr/01_OG_NH_100222.wav", "./test_audio_output/")
 
