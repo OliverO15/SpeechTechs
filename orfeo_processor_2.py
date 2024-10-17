@@ -5,6 +5,9 @@ import shutil
 import audiosegment
 from tqdm import tqdm
 
+
+A = 0
+
 def get_train_test(filenames: list[str], test_size: float=0.25):
     num_files = len(filenames)
     num_test_files = math.floor(num_files * test_size)
@@ -16,11 +19,12 @@ def get_train_test(filenames: list[str], test_size: float=0.25):
 
 
 def generate_sentences(filename, corpus_path, dest_dir, transcription_filepath):
+    global A
     print("Generating sentences for file", filename)
     
     count = 0
     prev_line = ""
-    out_file = open(os.path.join(dest_dir, transcription_filepath), "w")
+    out_file = open(transcription_filepath, "a")
     
     info = {}
     
@@ -45,15 +49,18 @@ def generate_sentences(filename, corpus_path, dest_dir, transcription_filepath):
             # __generate_sentence(start_sec, end_sec, f"{os.path.join(corpus_path, filename)}.wav", out_filename, dest_dir)
             info[out_filename] = [start_sec, end_sec]
             
-            out_file.write(f"<s>{text}</s> {out_filename}.wav\n")
+            out_file.write(f"<s>{text}</s> {dest_dir}/{out_filename}.wav\n")
         else:
             count += 1
         
         prev_line = line
     
     out_file.close()
-    __generate_sentence(info, os.path.join(corpus_path, f"{filename}.wav"), dest_dir)
+    A += len(info)
+    # __generate_sentence(info, os.path.join(corpus_path, f"{filename}.wav"), dest_dir)
     
+    
+
 
 # def __generate_sentence(start, end, in_filename, out_filename, dest_dir): 
 def __generate_sentence(info, in_filename, dest_dir): 
@@ -86,6 +93,9 @@ if __name__ == "__main__":
     
     train, test = get_train_test(filenames)
     
+    print(f"{len(train)} training samples.")
+    print(f"{len(test)} testing samples.")
+    
     
     TRAIN_PATH = os.path.join(CORPUS_PATH, "corpus_fr_train")
     TEST_PATH = os.path.join(CORPUS_PATH, "corpus_fr_test")
@@ -104,11 +114,11 @@ if __name__ == "__main__":
         os.mkdir(TEST_PATH)
 
 
-    train_transcription_file = "train_transcription.txt"
-    test_transcription_file = "test_transcription.txt"
+    transcription_file = "transcription_file.txt"
     
     for file in train:
-        generate_sentences(file, CORPUS_PATH, TRAIN_PATH, train_transcription_file)
+        generate_sentences(file, CORPUS_PATH, TRAIN_PATH, transcription_file)
     
     for file in test:
-        generate_sentences(file, CORPUS_PATH, TEST_PATH, test_transcription_file)
+        generate_sentences(file, CORPUS_PATH, TEST_PATH, transcription_file)
+    

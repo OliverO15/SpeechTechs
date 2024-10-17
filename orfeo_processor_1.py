@@ -101,6 +101,7 @@ def read_corpus_files(folder_path) -> list:
 
 if __name__ == "__main__":
     files = read_corpus_files("./corpus_fr/")
+    random.seed(42)
     random.shuffle(files)
 
     num_test_files = math.floor(len(files) * 0.25)
